@@ -23,7 +23,8 @@ namespace to_do_list_with_asp.net_.Controllers
                 if (model.Email == savedEmail && model.Password == savedPassword)
                 {
                     HttpContext.Session.SetString("IsLoggedIn", "true");
-                    return RedirectToAction("Index", "Home");
+                   // edit
+                    return RedirectToAction("Index", "ToDo");
                 }
                 else
                 {
@@ -33,7 +34,7 @@ namespace to_do_list_with_asp.net_.Controllers
 
             return View(model);
         }
-
+      
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
