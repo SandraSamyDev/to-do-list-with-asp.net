@@ -11,5 +11,7 @@ namespace to_do_list_with_asp.net_.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<todotask> TodoTasks { get; set; }
+
     }
 }

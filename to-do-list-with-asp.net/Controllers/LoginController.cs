@@ -1,11 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
+using to_do_list_with_asp.net_.Data; 
 using to_do_list_with_asp.net_.Models;
+using System.Linq;
 
 namespace to_do_list_with_asp.net_.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public LoginController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -13,31 +21,19 @@ namespace to_do_list_with_asp.net_.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(LoginViewModel model)
+        public IActionResult Index(string email, string password)
         {
-            if (ModelState.IsValid)
-            {
-                var savedEmail = HttpContext.Session.GetString("UserEmail");
-                var savedPassword = HttpContext.Session.GetString("UserPassword");
+            var user = _context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
 
-                if (model.Email == savedEmail && model.Password == savedPassword)
-                {
-                    HttpContext.Session.SetString("IsLoggedIn", "true");
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Invalid Email or Password.");
-                }
+            if (user != null)
+            {
+                HttpContext.Session.SetString("UserName", user.Username);
+
+                return RedirectToAction("Index", "ToDo");
             }
 
-            return View(model);
-        }
-
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Index");
+            ViewBag.ErrorMessage = "Invalid email or password.";
+            return View();
         }
     }
 }
