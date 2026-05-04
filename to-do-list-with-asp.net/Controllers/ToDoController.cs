@@ -24,7 +24,6 @@ namespace to_do_list_with_asp.net_.Controllers
             var pendingTasks = _context.TodoTasks.Where(t => !t.IsCompleted).ToList();
             return View(pendingTasks);
         }
-
         public IActionResult AllTasks()
         {
             ViewData["TitleName"] = "All Tasks";
