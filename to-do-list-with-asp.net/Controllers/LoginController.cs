@@ -1,11 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
+using to_do_list_with_asp.net_.Data; 
 using to_do_list_with_asp.net_.Models;
+using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace to_do_list_with_asp.net_.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public LoginController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -15,29 +24,31 @@ namespace to_do_list_with_asp.net_.Controllers
         [HttpPost]
         public IActionResult Index(LoginViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var savedEmail = HttpContext.Session.GetString("UserEmail");
-                var savedPassword = HttpContext.Session.GetString("UserPassword");
+            if (!ModelState.IsValid)
+                return View(model);
 
-                if (model.Email == savedEmail && model.Password == savedPassword)
-                {
-                    HttpContext.Session.SetString("IsLoggedIn", "true");
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Invalid Email or Password.");
-                }
+            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid email or password");
+                return View(model);
             }
 
-            return View(model);
-        }
+            var hasher = new PasswordHasher<User>();
 
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Index");
+            var result = hasher.VerifyHashedPassword(user, user.Password, model.Password);
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                ModelState.AddModelError("", "Invalid email or password");
+                return View(model);
+            }
+
+            HttpContext.Session.SetString("UserName", user.Username);
+            HttpContext.Session.SetInt32("UserId", user.Id);
+
+            return RedirectToAction("Index", "ToDo");
         }
     }
 }

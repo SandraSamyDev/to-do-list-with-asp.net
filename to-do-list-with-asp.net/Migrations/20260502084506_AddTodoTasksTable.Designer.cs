@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using to_do_list_with_asp.net_.Data;
 
@@ -11,9 +12,11 @@ using to_do_list_with_asp.net_.Data;
 namespace to_do_list_with_asp.net_.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260502084506_AddTodoTasksTable")]
+    partial class AddTodoTasksTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,30 +71,9 @@ namespace to_do_list_with_asp.net_.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("TodoTasks");
-                });
-
-            modelBuilder.Entity("to_do_list_with_asp.net_.Models.todotask", b =>
-                {
-                    b.HasOne("to_do_list_with_asp.net_.Models.User", "User")
-                        .WithMany("TodoTasks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("to_do_list_with_asp.net_.Models.User", b =>
-                {
-                    b.Navigation("TodoTasks");
                 });
 #pragma warning restore 612, 618
         }
