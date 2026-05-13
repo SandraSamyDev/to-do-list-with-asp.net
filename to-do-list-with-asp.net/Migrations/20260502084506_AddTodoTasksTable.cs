@@ -32,7 +32,7 @@ namespace to_do_list_with_asp.net_.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "TodoTasks");
+                name: "todotask");
         }
     }
 }

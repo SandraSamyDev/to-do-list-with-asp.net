@@ -1,9 +1,9 @@
 ﻿
 
 using Microsoft.AspNetCore.Mvc;
-using to_do_list_with_asp.net_.Models;
 using to_do_list_with_asp.net_.Data; 
-
+using to_do_list_with_asp.net_.Models;
+using Microsoft.AspNetCore.Identity;
 namespace to_do_list_with_asp.net_.Controllers
 {
     public class RegisterController : Controller
@@ -34,12 +34,15 @@ namespace to_do_list_with_asp.net_.Controllers
                     return View(model);
                 }
 
+                var hasher = new PasswordHasher<User>();
+
                 var newUser = new User
                 {
                     Username = model.Username,
-                    Email = model.Email,
-                    Password = model.Password
+                    Email = model.Email
                 };
+
+                newUser.Password = hasher.HashPassword(newUser, model.Password);
 
                 _context.Users.Add(newUser);
                 _context.SaveChanges();

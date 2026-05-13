@@ -20,24 +20,37 @@
         @* الـ Sidebar بيظهر فقط في صفحات المهام وليس في صفحة الهبوط أو التسجيل *@
         @if (!excludedControllers.Contains(currentController))
         {
+            var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
             <div class="border-end bg-white" id="sidebar-wrapper" style="width: 280px; min-height: 100vh;">
+
                 <div class="sidebar-heading p-3">
                     <i class="bi bi-list fs-4"></i>
                     <span class="ms-2 fw-bold">Menu</span>
                 </div>
+
                 <div class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action p-3 border-0"
-                       asp-controller="ToDo" asp-action="Index">
+
+                    <a class="list-group-item list-group-item-action p-3 border-0 @(currentAction == "Index" ? "active" : "")"
+                           asp-controller="ToDo" asp-action="Index">
                         <i class="bi bi-brightness-high me-2"></i> My Day
                     </a>
-                    <a class="list-group-item list-group-item-action p-3 border-0"
-                       asp-controller="ToDo" asp-action="Important">
+
+                    <a class="list-group-item list-group-item-action p-3 border-0 @(currentAction == "Important" ? "active" : "")"
+                           asp-controller="ToDo" asp-action="Important">
                         <i class="bi bi-star me-2"></i> Important
                     </a>
-                    <a class="list-group-item list-group-item-action p-3 border-0"
-                       asp-controller="ToDo" asp-action="CompletedTasks">
-                        <i class="bi bi-house-door me-2"></i> Tasks
+
+                    <a class="list-group-item list-group-item-action p-3 border-0 @(currentAction == "CompletedTasks" ? "active" : "")"
+                           asp-controller="ToDo" asp-action="CompletedTasks">
+                        <i class="bi bi-check2-circle me-2"></i> Completed
                     </a>
+
+                    <a class="list-group-item list-group-item-action p-3 border-0 @(currentAction == "AllTasks" ? "active" : "")"
+                           asp-controller="ToDo" asp-action="AllTasks">
+                        <i class="bi bi-list-task me-2"></i> All Tasks
+                    </a>
+
                 </div>
             </div>
         }
@@ -52,7 +65,7 @@
 
             <footer class="border-top footer text-muted py-2 bg-white">
                 <div class="container-fluid text-center">
-                    <small>&copy; 2026 - ToDo App - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-decoration-none">Privacy</a></small>
+                    <small>&copy; 2026 - ToDo App</small>
                 </div>
             </footer>
         </div>

@@ -2,6 +2,7 @@
 using to_do_list_with_asp.net_.Data; 
 using to_do_list_with_asp.net_.Models;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace to_do_list_with_asp.net_.Controllers
 {
@@ -21,19 +22,33 @@ namespace to_do_list_with_asp.net_.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(string email, string password)
+        public IActionResult Index(LoginViewModel model)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
+            if (!ModelState.IsValid)
+                return View(model);
 
-            if (user != null)
+            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
+
+            if (user == null)
             {
-                HttpContext.Session.SetString("UserName", user.Username);
-
-                return RedirectToAction("Index", "ToDo");
+                ModelState.AddModelError("", "Invalid email or password");
+                return View(model);
             }
 
-            ViewBag.ErrorMessage = "Invalid email or password.";
-            return View();
+            var hasher = new PasswordHasher<User>();
+
+            var result = hasher.VerifyHashedPassword(user, user.Password, model.Password);
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                ModelState.AddModelError("", "Invalid email or password");
+                return View(model);
+            }
+
+            HttpContext.Session.SetString("UserName", user.Username);
+            HttpContext.Session.SetInt32("UserId", user.Id);
+
+            return RedirectToAction("Index", "ToDo");
         }
     }
 }

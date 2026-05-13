@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore; 
+﻿using Microsoft.EntityFrameworkCore;
 namespace to_do_list_with_asp.net_
 {
     public class Program
@@ -21,6 +21,8 @@ namespace to_do_list_with_asp.net_
                 options.Cookie.IsEssential = true;
             });
 
+            builder.Services.AddAuthorization();
+
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
@@ -35,7 +37,6 @@ namespace to_do_list_with_asp.net_
             app.UseRouting();
 
             app.UseSession();
-
             app.UseAuthorization();
 
             app.MapControllerRoute(

@@ -1,0 +1,65 @@
+﻿@model to_do_list_with_asp.net_.Models.todotask
+
+@{
+    ViewData["Title"] = "Edit Task";
+}
+
+<div class="main-content-area">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            <i class="bi bi-pencil-square text-warning"></i> Edit Task
+        </h2>
+        <p class="text-muted small">Update your task details below</p>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+
+            <form asp-action="Edit" method="post">
+
+                <!-- Hidden ID -->
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Task Title -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Task Title</label>
+                    <input asp-for="Title" class="form-control" placeholder="Enter task title" />
+                </div>
+
+                <!-- Created Date (read-only) -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Created Date</label>
+                    <input class="form-control" value="@Model.CreatedDate.ToString("g")" readonly />
+                </div>
+
+                <!-- Checkboxes -->
+                <div class="form-check mb-2">
+                    <input asp-for="IsCompleted" class="form-check-input" />
+                    <label class="form-check-label">Completed</label>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input asp-for="IsImportant" class="form-check-input" />
+                    <label class="form-check-label">Important</label>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between">
+
+                    <a asp-action="Index" class="btn btn-light border">
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="btn btn-primary px-4">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
